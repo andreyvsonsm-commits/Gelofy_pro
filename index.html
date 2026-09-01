@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1C120C">
+  <meta name="description" content="Gelofy — dindins gourmet artesanais, combos e pedidos rápidos pelo WhatsApp. Calcule a entrega e finalize seu pedido.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://gelofy.com.br/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gelofy | Dindins Gourmet">
+  <meta property="og:description" content="Dindins artesanais recheados. Monte seu pedido e finalize pelo WhatsApp com frete calculado pela rota.">
+  <meta property="og:image" content="nutela.png">
+  <link rel="icon" type="image/png" href="gelofy.png">
+  <title>Gelofy | Dindins Gourmet</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --cream:#F8F1E7;--cream-2:#EFE1C8;--paper:#FFFDF9;
+      --espresso:#20140D;--espresso-2:#3A2416;--caramel:#A8622A;--caramel-dark:#7A4318;--caramel-light:#E3AD6E;
+      --ink:#241708;--muted:#786353;--line:rgba(32,20,13,.12);--success:#1d7b4d;--danger:#a83d32;
+      --container:1180px;--radius:24px;--radius-sm:15px;
+      --shadow:0 24px 60px rgba(32,20,13,.16);--shadow-sm:0 10px 26px rgba(32,20,13,.12);
+      --ease:cubic-bezier(.22,1,.36,1);
+      --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      --display:"Instrument Serif",Georgia,serif;
+      --mono:"Space Grotesk",var(--font);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--cream);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body.is-locked{overflow:hidden}
+    img{display:block;max-width:100%}
+    button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+    section{scroll-margin-top:86px}
+    .container{width:min(var(--container),calc(100% - 40px));margin-inline:auto}
+    .skip-link{position:fixed;left:12px;top:-60px;z-index:1000;background:var(--espresso);color:#fff;padding:10px 14px;border-radius:10px;transition:top .2s var(--ease)}
+    .skip-link:focus{top:12px}
+
+    .header{position:sticky;top:0;z-index:100;background:rgba(248,241,231,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(18px) saturate(1.4);transition:box-shadow .25s var(--ease),background .25s var(--ease)}
+    .header.scrolled{box-shadow:0 10px 32px rgba(32,20,13,.09);background:rgba(255,253,249,.94)}
+    .header-inner{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .brand{display:inline-flex;align-items:center;gap:11px;font-weight:800}
+    .brand img{width:38px;height:38px;object-fit:contain}
+    .brand span{font-family:var(--mono);font-weight:700;font-size:1.28rem;letter-spacing:-.01em}
+    .nav{display:none}.nav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0}
+    .nav a{position:relative;font-size:.86rem;font-weight:600;color:var(--muted);padding:6px 0}
+    .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:-1px;height:2px;background:var(--caramel);transition:right .25s var(--ease)}
+    .nav a:hover{color:var(--ink)}.nav a:hover::after{right:0}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:0 22px;border-radius:999px;border:1px solid transparent;font-weight:700;font-size:.87rem;position:relative;overflow:hidden;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background-color .25s var(--ease),color .25s var(--ease)}
+    .btn::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 20%,rgba(255,255,255,.35) 50%,transparent 80%);transform:translateX(-120%);transition:transform .6s var(--ease)}
+    .btn:hover::before{transform:translateX(120%)}
+    .btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(0) scale(.99)}
+    .btn-primary{background:var(--caramel);color:#fff;box-shadow:var(--shadow-sm)}.btn-primary:hover{background:var(--caramel-dark)}
+    .btn-light{background:var(--paper);color:var(--ink);border-color:var(--line)}.btn-light:hover{border-color:var(--caramel)}
+    .btn-ghost-dark{background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.28)}.btn-ghost-dark:hover{background:rgba(255,255,255,.16)}
+    .btn-full{width:100%}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}.btn:disabled::before{display:none}
+    .btn:focus-visible,a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid var(--caramel-dark);outline-offset:2px;border-radius:8px}
+
+    h1,h2,h3{margin:0}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--caramel-dark);font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+    .eyebrow::before{content:"";width:20px;height:2px;border-radius:3px;background:currentColor}
+
+    /* HERO — cinematic dark stage, ice-shard transition into cream body */
+    .hero{background:radial-gradient(130% 130% at 12% -10%,#4A2A15 0%,var(--espresso-2) 45%,var(--espresso) 100%);color:#F6EEE3;position:relative;padding-bottom:70px;isolation:isolate}
+    .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 85% 20%,rgba(230,173,110,.16),transparent 70%);pointer-events:none}
+    .hero-grid{display:grid;grid-template-columns:1fr;gap:38px;min-height:600px;align-items:center;position:relative;z-index:1}
+    .hero-copy{padding-top:60px}
+    .hero-content{max-width:600px}
+    .hero .eyebrow{color:var(--caramel-light)}
+    .hero h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(2.9rem,7vw,5.4rem);line-height:1;margin-top:16px;letter-spacing:-.01em}
+    .hero-copy p{font-size:1.08rem;color:#D9CBBB;max-width:520px;margin:22px 0 0}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+    .hero-proof{display:flex;align-items:center;gap:10px;margin-top:24px;font-size:.82rem;font-weight:600;color:#C4B39E}
+    .proof-dot{width:8px;height:8px;border-radius:50%;background:#4FCB8D;box-shadow:0 0 0 5px rgba(79,203,141,.16)}
+    .hero-visual{position:relative;border-radius:28px;overflow:hidden;min-height:380px;box-shadow:0 35px 80px rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12)}
+    .hero-visual img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+    .hero-visual:hover img{transform:scale(1.04)}
+    .hero-visual::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,12,7,.5) 100%)}
+    .hero-label{position:absolute;left:18px;bottom:18px;z-index:2;padding:11px 16px;border-radius:999px;background:rgba(255,253,249,.96);color:var(--espresso);font-family:var(--mono);font-size:.78rem;font-weight:700;box-shadow:var(--shadow-sm)}
+    .ice-divider{position:absolute;left:0;right:0;bottom:-1px;line-height:0;z-index:1}
+    .ice-divider svg{width:100%;height:auto;display:block}
+
+    .section{padding:78px 0}
+    .section-head{max-width:680px;margin-bottom:38px}
+    .section-head h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(2.1rem,4.6vw,3.4rem);line-height:1.06;margin-top:10px}
+    .section-head p{color:var(--muted);margin:14px 0 0;font-size:1rem}
+
+    .benefits{background:var(--cream-2)}
+    .benefit-grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .benefit{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:24px;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+    .benefit:hover{transform:translateY(-4px);box-shadow:var(--shadow-sm)}
+    .benefit-icon{width:42px;height:42px;border-radius:13px;background:rgba(168,98,42,.1);display:flex;align-items:center;justify-content:center;color:var(--caramel-dark)}
+    .benefit-icon svg{width:21px;height:21px}
+    .benefit h3{margin-top:15px;font-size:1.04rem}
+    .benefit p{color:var(--muted);font-size:.87rem;margin:7px 0 0}
+
+    .products{display:grid;grid-template-columns:1fr;gap:18px}
+    .product{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
+    .product:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+    .product-image{aspect-ratio:1/1.15;overflow:hidden;background:var(--cream-2);position:relative}
+    .product-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+    .product:hover .product-image img{transform:scale(1.06)}
+    .product-body{padding:19px}
+    .product-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .product-top h3{font-size:1.06rem}
+    .price{font-family:var(--mono);font-weight:700;color:var(--caramel-dark)}
+    .product-body p{font-size:.83rem;color:var(--muted);min-height:54px;margin:8px 0 14px}
+    .product-body .btn{width:100%}
+
+    .combos{background:var(--paper)}
+    .combo-grid{display:grid;grid-template-columns:1fr;gap:18px}
+    .combo{position:relative;background:var(--cream);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm);transition:transform .3s var(--ease)}
+    .combo:hover{transform:translateY(-4px)}
+    .combo.featured{border-color:rgba(168,98,42,.5);box-shadow:0 22px 55px rgba(168,98,42,.18);background:linear-gradient(165deg,var(--paper),var(--cream-2))}
+    .combo-badge{display:inline-flex;align-items:center;gap:6px;background:var(--espresso);color:var(--caramel-light);border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:16px}
+    .combo h3{font-family:var(--display);font-style:italic;font-size:1.85rem}
+    .combo-price{font-family:var(--mono);font-size:2.3rem;font-weight:700;margin-top:10px}
+    .unit{font-size:.82rem;color:var(--muted)}
+    .save{display:inline-block;margin-top:10px;color:var(--success);font-size:.78rem;font-weight:700}
+    .combo .btn{width:100%;margin-top:22px}
+
+    .experience-grid{display:grid;grid-template-columns:1fr;gap:16px}
+    .shot{position:relative;overflow:hidden;border-radius:var(--radius);min-height:400px}
+    .shot img{width:100%;height:100%;object-fit:cover;transition:transform .7s var(--ease)}
+    .shot:hover img{transform:scale(1.05)}
+    .shot::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,12,7,.55) 100%)}
+    .shot span{position:absolute;left:16px;bottom:16px;z-index:1;background:rgba(255,253,249,.95);padding:9px 14px;border-radius:999px;font-size:.75rem;font-weight:700;color:var(--espresso)}
+
+    .order-section{background:var(--cream-2)}
+    .order-layout{display:grid;grid-template-columns:1fr;gap:18px}
+    .order-card,.order-summary{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm)}
+    .order-card h3,.order-summary h3{font-size:1.06rem}
+    .selector-row{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:22px;padding:15px;border:1px solid var(--line);border-radius:16px;background:var(--cream)}
+    .qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+    .qty button{width:38px;height:36px;border:0;background:transparent;color:var(--ink);font-size:1.1rem;transition:background .2s var(--ease)}
+    .qty button:hover{background:var(--cream-2)}
+    .qty output{min-width:34px;text-align:center;font-weight:700;font-family:var(--mono)}
+    .flavor-list{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px}
+    .flavor{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;transition:border-color .2s var(--ease)}
+    .flavor:has(output:not([aria-label*="Nutella, quantidade 0"])){}
+    .flavor-name{font-weight:700;font-size:.92rem}
+    .summary-line{display:flex;justify-content:space-between;gap:15px;padding:9px 0;border-bottom:1px solid var(--line);font-size:.88rem}
+    .summary-total{display:flex;justify-content:space-between;gap:15px;padding-top:16px;font-size:1.22rem;font-weight:700;font-family:var(--mono)}
+    .summary-note{font-size:.78rem;color:var(--muted);margin:12px 0 18px}
+    .empty-state{color:var(--muted);font-size:.9rem}
+
+    .delivery-box{margin-top:16px;padding:17px;border-radius:16px;background:var(--cream-2);border:1px solid var(--line)}
+    .delivery-box h4{margin:0;font-size:.92rem}
+    .delivery-status{font-size:.8rem;color:var(--muted);margin:7px 0 12px;display:flex;align-items:center;gap:8px}
+    .spinner{width:13px;height:13px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--caramel);animation:spin .7s linear infinite;flex-shrink:0;display:none}
+    .is-loading .spinner{display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .delivery-result{display:none;margin-top:12px;padding:13px;border-radius:13px;background:#fff;border:1px solid rgba(29,123,77,.22)}
+    .delivery-result.show{display:block}
+    .delivery-result strong{display:block;font-size:1.18rem;font-family:var(--mono);color:var(--success)}
+    .delivery-meta{font-size:.75rem;color:var(--muted);margin-top:4px}
+    .delivery-error{display:none;margin-top:10px;color:var(--danger);font-size:.78rem;font-weight:600}
+    .delivery-error.show{display:block}
+    .map-attribution{font-size:.65rem;color:var(--muted);margin-top:10px}
+    .map-attribution a{text-decoration:underline}
+
+    .faq{background:var(--cream)}
+    .faq-list{display:grid;grid-template-columns:1fr;gap:10px;max-width:850px}
+    details{border-top:1px solid var(--line);padding:19px 0}
+    summary{cursor:pointer;font-weight:700;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    summary::-webkit-details-marker{display:none}
+    summary::after{content:"+";font-size:1.3rem;color:var(--caramel);transition:transform .25s var(--ease);flex-shrink:0}
+    details[open] summary::after{transform:rotate(45deg)}
+    details p{color:var(--muted);font-size:.9rem;margin:12px 0 0}
+
+    .final-cta{background:radial-gradient(120% 140% at 50% 0%,#3E2413 0%,var(--espresso) 70%);color:#F6EEE3;padding:96px 0;text-align:center}
+    .final-cta h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(2.5rem,5.2vw,4.2rem)}
+    .final-cta p{color:#D9CBBB;max-width:620px;margin:16px auto 26px}
+    .contact{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin-top:26px;font-size:.8rem;color:#C4B39E}
+
+    footer{background:#150D07;color:#C4B39E;padding:26px 0}
+    .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    .footer-inner .brand span{color:#fff}
+    .footer-inner small{font-size:.72rem}
+
+    .floating{position:fixed;right:20px;bottom:20px;z-index:80;width:58px;height:58px;border:0;border-radius:50%;background:var(--caramel);color:#fff;box-shadow:0 16px 36px rgba(32,20,13,.35);transition:transform .25s var(--ease)}
+    .floating:hover{transform:scale(1.08)}
+
+    .modal-backdrop{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(20,12,7,.62);backdrop-filter:blur(10px)}
+    .modal-backdrop.open{display:flex}
+    .modal{width:min(720px,100%);max-height:min(92vh,860px);overflow:auto;background:var(--paper);border-radius:26px;padding:24px;box-shadow:0 40px 90px rgba(0,0,0,.35);animation:modal-in .35s var(--ease)}
+    @keyframes modal-in{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+    .modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+    .modal-header h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:2.1rem}
+    .modal-sub{color:var(--muted);font-size:.82rem;margin:6px 0 0}
+    .close{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#fff;font-size:1.4rem;flex-shrink:0;transition:background .2s var(--ease)}
+    .close:hover{background:var(--cream-2)}
+    .modal-order{background:var(--cream-2);border-radius:16px;padding:16px;margin:18px 0}
+    .modal-order strong{display:block;margin-bottom:7px}
+    .modal-order .order-mini-line{font-size:.82rem;margin-top:4px}
+    .modal-total{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-weight:700;font-family:var(--mono)}
+    .form-grid{display:grid;grid-template-columns:1fr;gap:13px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field label{font-size:.77rem;font-weight:700}
+    .field input,.field select{width:100%;border:1px solid var(--line);border-radius:13px;padding:13px 14px;background:#fff;color:var(--ink);outline:0;transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+    .field input:focus,.field select:focus{border-color:var(--caramel);box-shadow:0 0 0 3px rgba(168,98,42,.14)}
+    .field.full{grid-column:1/-1}
+    .field-help{font-size:.7rem;color:var(--muted);margin:0}
+    .address-input{min-height:92px;resize:vertical}
+    .modal-actions{display:grid;gap:9px;margin-top:18px}
+    .payment-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid rgba(29,123,77,.24);background:rgba(29,123,77,.07);border-radius:13px}
+    .payment-chip strong{color:var(--success);font-size:.84rem}
+    .toast{position:fixed;left:50%;bottom:25px;z-index:500;transform:translate(-50%,20px);background:var(--espresso);color:#fff;padding:12px 17px;border-radius:999px;opacity:0;pointer-events:none;transition:.28s var(--ease);font-size:.82rem;font-weight:600}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+    .reveal.visible{opacity:1;transform:none}
+
+    @media (min-width:640px){.benefit-grid{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:repeat(2,1fr)}.combo-grid{grid-template-columns:repeat(3,1fr)}.flavor-list{grid-template-columns:repeat(2,1fr)}.form-grid{grid-template-columns:1fr 1fr}}
+    @media (min-width:860px){.nav{display:block}.benefit-grid{grid-template-columns:repeat(4,1fr)}.products{grid-template-columns:repeat(5,1fr)}.experience-grid{grid-template-columns:1.15fr .85fr;align-items:stretch}.order-layout{grid-template-columns:1.2fr .8fr;align-items:start}.order-summary{position:sticky;top:98px}.hero-grid{grid-template-columns:1fr 1fr}.hero-copy{padding:74px 40px 74px 0}.hero-visual{min-height:560px}}
+    @media (min-width:1180px){.hero-grid{min-height:660px}.hero-visual{min-height:660px}}
+    @media (prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.spinner{display:none!important}}
+  </style>
+</head>
+
+<body>
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+<header class="header" id="inicio">
+  <div class="container header-inner">
+    <a class="brand" href="#inicio" aria-label="Gelofy — início"><img src="gelofy.png" alt="Gelofy" width="38" height="38"><span>Gelofy</span></a>
+    <nav class="nav" aria-label="Navegação principal">
+      <ul><li><a href="#cardapio">Sabores</a></li><li><a href="#combos">Combos</a></li><li><a href="#pedido">Montar pedido</a></li><li><a href="#duvidas">Dúvidas</a></li></ul>
+    </nav>
+    <button class="btn btn-primary" type="button" data-open-order>Fazer pedido</button>
+  </div>
+</header>
+
+<main id="conteudo">
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <div class="hero-content">
+          <span class="eyebrow">Gelofy · Dindins gourmet</span>
+          <h1>O seu próximo sabor favorito está aqui.</h1>
+          <p>Dindins cremosos, recheios generosos e sabores para escolher sem complicação. Monte seu pedido, calcule a entrega e envie tudo organizado pelo WhatsApp.</p>
+          <div class="hero-actions"><button class="btn btn-primary" type="button" data-open-order>Montar meu pedido</button><a class="btn btn-ghost-dark" href="#cardapio">Ver sabores</a></div>
+          <div class="hero-proof"><span class="proof-dot" aria-hidden="true"></span>Pedido rápido · Frete calculado pela rota</div>
+        </div>
+      </div>
+      <div class="hero-visual"><img src="nutela.png" alt="Dindin Gelofy de Nutella com recheio cremoso, servido sobre gelo" width="1024" height="1024" fetchpriority="high"><span class="hero-label">Nutella · R$ 7,00</span></div>
+    </div>
+    <div class="ice-divider" aria-hidden="true"><svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path fill="#F8F1E7" d="M0,80 L0,34 L60,52 L130,20 L210,46 L290,14 L370,44 L450,24 L540,50 L620,18 L710,42 L800,22 L890,48 L980,16 L1070,44 L1160,24 L1250,50 L1330,20 L1440,40 L1440,80 Z"/></svg></div>
+  </section>
+
+  <section class="section benefits" aria-labelledby="beneficios-title">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow">Por que Gelofy</span><h2 id="beneficios-title">Uma experiência simples do primeiro clique ao pedido.</h2></div>
+      <div class="benefit-grid">
+        <article class="benefit reveal"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M12 16v6M4.9 4.9l4.2 4.2M14.9 14.9l4.2 4.2M2 12h6M16 12h6M4.9 19.1l4.2-4.2M14.9 9.1l4.2-4.2"/></svg></div><h3>Sabores marcantes</h3><p>Mais de 5 Escolhas Difíceis de Decidir.</p></article>
+        <article class="benefit reveal"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h9"/></svg></div><h3>Escolha com liberdade</h3><p>Monte a combinação que quiser dentro do seu combo.</p></article>
+        <article class="benefit reveal"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v10H4zM4 7l3-3h10l3 3"/></svg></div><h3>Preço transparente</h3><p>R$ 7,00 individual e combos com economia progressiva.</p></article>
+        <article class="benefit reveal"><div class="benefit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.3"/></svg></div><h3>Entrega calculada</h3><p>O sistema calcula a distância pela rota e aplica a tabela de frete da Gelofy.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section menu" id="cardapio" aria-labelledby="cardapio-title">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow">Cardápio</span><h2 id="cardapio-title">Qual sabor vai primeiro?</h2><p>Escolha um sabor individual ou monte um combo para levar mais por menos.</p></div>
+      <div class="products" id="productsGrid">
+        <p class="empty-state">Carregando cardápio…</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section combos" id="combos" aria-labelledby="combos-title">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow">Combos Gelofy</span><h2 id="combos-title">Leve mais. Pague menos por unidade.</h2><p>O preço individual é R$ 7,00. Nos combos, o valor por dindin cai progressivamente.</p></div>
+      <div class="combo-grid" id="combosGrid">
+        <p class="empty-state">Carregando combos…</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section experience" aria-labelledby="experiencia-title">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow">Experiência Gelofy</span><h2 id="experiencia-title">É para olhar e já ficar com vontade.</h2><p>Produtos apresentados de forma clara para você decidir pelo sabor que mais combina com o seu momento.</p></div>
+      <div class="experience-grid">
+        <div class="shot reveal"><img src="oreo.png" alt="Dindin de Oreo com biscoito e chocolate" loading="lazy" width="1024" height="1024"><span>Oreo · crocância e cremosidade</span></div>
+        <div class="shot reveal"><img src="doce.png" alt="Dindin de doce de leite caramelizado" loading="lazy" width="1254" height="1254"><span>Doce de leite · clássico caramelizado</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section order-section" id="pedido" aria-labelledby="pedido-title">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow">Pedido inteligente</span><h2 id="pedido-title">Monte seu pedido antes de falar com a Gelofy.</h2><p>Escolha a quantidade e distribua os sabores. Depois, informe o endereço, calcule o frete e envie o pedido pronto pelo WhatsApp.</p></div>
+      <div class="order-layout">
+        <div class="order-card reveal">
+          <h3>1. Escolha a quantidade</h3>
+          <div class="selector-row"><label for="orderQty">Quantidade de dindins</label><div class="qty"><button type="button" id="qtyMinus" aria-label="Diminuir quantidade">−</button><output id="qtyValue" for="qtyMinus qtyPlus">1</output><button type="button" id="qtyPlus" aria-label="Aumentar quantidade">+</button></div></div>
+          <div style="margin-top:26px"><h3>2. Distribua os sabores</h3><div class="flavor-list" id="flavorList"></div></div>
+        </div>
+        <aside class="order-summary reveal" aria-live="polite">
+          <h3>Resumo do pedido</h3>
+          <div id="summaryContent"><p class="empty-state">Escolha pelo menos um sabor para começar.</p></div>
+          <button class="btn btn-primary btn-full" type="button" id="openCheckout" disabled>Continuar</button>
+          <p class="summary-note">O pedido só será enviado ao WhatsApp depois que os dados de entrega forem preenchidos.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section faq" id="duvidas" aria-labelledby="duvidas-title">
+    <div class="container">
+      <div class="section-head reveal"><span class="eyebrow">Dúvidas rápidas</span><h2 id="duvidas-title">Tudo que você precisa saber antes de pedir.</h2></div>
+      <div class="faq-list reveal">
+        <details><summary>Quanto custa um dindin?</summary><p>O dindin individual custa R$ 7,00. Também existem combos de 3 por R$ 20, 5 por R$ 33 e 10 por R$ 65.</p></details>
+        <details><summary>Posso misturar os sabores no combo?</summary><p>Sim. O montador de pedido permite distribuir a quantidade entre Nutella, Paçoca, Cappuccino, Oreo e Doce de leite.</p></details>
+        <details><summary>Como o frete é calculado?</summary><p>O site calcula a rota de carro entre a localização autorizada no dispositivo e o ponto de saída da Gelofy. A taxa segue faixas de distância de até 25 km.</p></details>
+        <details><summary>Qual é a forma de pagamento?</summary><p>Você informa a forma de pagamento no campo do pedido antes de enviar para o WhatsApp.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta" id="contato">
+    <div class="container"><span class="eyebrow" style="color:var(--caramel-light)">Pronto para escolher?</span><h2>Qual sabor vai ser o primeiro?</h2><p>Monte seu pedido, calcule a entrega e envie tudo organizado para a Gelofy.</p><button class="btn btn-primary" type="button" data-open-order>Montar meu pedido</button><div class="contact"><a href="mailto:svon.commerce@gmail.com">Contato e Parceria: svon.commerce@gmail.com</a></div></div>
+  </section>
+</main>
+
+<footer><div class="container footer-inner"><a class="brand" href="#inicio" aria-label="Voltar ao início"><img src="gelofy.png" alt="" width="38" height="38"><span>Gelofy</span></a><small>Gelofy © 2026</small></div></footer>
+
+<button class="floating" type="button" data-open-order aria-label="Abrir montador de pedido" title="Montar pedido">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8.3 8.3 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 20l1-5.5A8.3 8.3 0 0 1 12.5 3 8.3 8.3 0 0 1 20 11.5Z"/><path d="M8.5 9.5c.5 2.5 2.2 4.2 4.7 4.7"/></svg>
+</button>
+
+<div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+  <div class="modal">
+    <div class="modal-header"><div><h2 id="checkoutTitle">Finalizar pedido</h2><p class="modal-sub">Preencha os dados, calcule a entrega e envie o pedido pelo WhatsApp.</p></div><button class="close" type="button" id="closeModal" aria-label="Fechar">×</button></div>
+    <div class="modal-order" id="modalOrder"></div>
+
+    <div class="form-grid">
+      <div class="field"><label for="customerName">Nome</label><input id="customerName" type="text" maxlength="80" autocomplete="name" placeholder="Como podemos te chamar?" required></div>
+      <div class="field"><label for="customerPhone">Telefone</label><input id="customerPhone" type="tel" maxlength="20" autocomplete="tel" placeholder="(00) 00000-0000" required></div>
+      <div class="field full"><label for="customerAddress">Endereço completo</label><textarea id="customerAddress" class="address-input" maxlength="300" autocomplete="street-address" placeholder="Rua, número, bairro, cidade e complemento" required></textarea><p class="field-help">O endereço será incluído no pedido enviado ao WhatsApp.</p></div>
+      <div class="field full">
+        <div class="delivery-box">
+          <h4>Calcular frete pela rota</h4>
+          <p class="delivery-status" id="deliveryStatus"><span class="spinner" aria-hidden="true"></span><span id="deliveryStatusText">Use a localização do dispositivo para calcular a distância da rota até a Gelofy. Nenhuma chave de API é necessária.</span></p>
+          <button class="btn btn-light btn-full" type="button" id="calculateDelivery">Calcular minha entrega</button>
+          <div class="delivery-result" id="deliveryResult"><strong id="deliveryPrice">R$ 0,00</strong><div class="delivery-meta" id="deliveryMeta"></div></div>
+          <div class="delivery-error" id="deliveryError"></div>
+          <p class="map-attribution">Roteamento: OSRM · dados de mapa: © OpenStreetMap contributors.</p>
+        </div>
+      </div>
+      <div class="field full"><label for="paymentMethod">Forma de pagamento</label><input id="paymentMethod" type="text" maxlength="80" autocomplete="off" placeholder="Ex.: Pix, dinheiro, cartão..." required><p class="field-help">Informe como deseja pagar. Essa informação será enviada junto com o pedido pelo WhatsApp.</p></div>
+    </div>
+
+    <div class="modal-actions"><button class="btn btn-primary btn-full" type="button" id="sendWhatsApp" disabled>Enviar pedido pelo WhatsApp</button><button class="btn btn-light btn-full" type="button" id="cancelModal">Voltar</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-config.js"></script>
+<script>
+(() => {
+  "use strict";
+
+  // ── Configuração fixa (só o WhatsApp e a rota do OSRM continuam fixos no código) ──
+  const CONFIG = Object.freeze({
+    whatsapp: "5581985784096",
+    maxQty: 10,
+    routingUrl: "https://router.project-osrm.org/route/v1/driving"
+  });
+
+  // Usados só se o Supabase ainda não tiver "delivery_settings"/"delivery_tiers" configurados,
+  // pra o site nunca quebrar. Depois de configurado no painel, esses valores nunca são usados.
+  const DEFAULT_ORIGIN = {lat:-7.99221, lon:-34.91263};
+  const DEFAULT_TIERS = [
+    {max_km:2,price:5},{max_km:5,price:10},{max_km:10,price:15},
+    {max_km:15,price:20},{max_km:20,price:25},{max_km:25,price:30}
+  ];
+
+  // ── Cliente Supabase (produtos, combos e preços agora vêm do banco) ──
+  const isSupabaseConfigured =
+    window.SUPABASE_URL && !window.SUPABASE_URL.includes("COLE_AQUI") &&
+    window.SUPABASE_ANON_KEY && !window.SUPABASE_ANON_KEY.includes("COLE_AQUI");
+  const supabase = isSupabaseConfigured
+    ? window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY)
+    : null;
+
+  const state = {
+    qty: 1,
+    products: [],       // vem do Supabase: [{id, name, price, description, image_url}, ...]
+    combos: [],         // vem do Supabase: [{id, name, quantity, price, featured}, ...]
+    deliveryOrigin: null,   // vem do Supabase: {lat, lon}
+    deliveryTiers: [],      // vem do Supabase: [{max_km, price}, ...] ordenado
+    cart: {},           // { [productId]: quantidade }
+    delivery: null
+  };
+
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => [...document.querySelectorAll(s)];
+  const money = (v) => Number(v).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+
+  const qtyValue=$("#qtyValue"), flavorList=$("#flavorList"), summaryContent=$("#summaryContent");
+  const productsGrid=$("#productsGrid"), combosGrid=$("#combosGrid");
+  const openCheckout=$("#openCheckout"), modal=$("#checkoutModal"), modalOrder=$("#modalOrder");
+  const toast=$("#toast"), sendWhatsApp=$("#sendWhatsApp"), deliveryResult=$("#deliveryResult");
+  const deliveryPrice=$("#deliveryPrice"), deliveryMeta=$("#deliveryMeta"), deliveryError=$("#deliveryError");
+  const deliveryStatus=$("#deliveryStatus"), deliveryStatusText=$("#deliveryStatusText"), calculateBtn=$("#calculateDelivery");
+
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"']/g,(c)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  }
+
+  function productById(id){ return state.products.find(p=>p.id===id); }
+  function comboForQty(qty){ return state.combos.find(c=>Number(c.quantity)===qty) || null; }
+  function totalSelected(){ return Object.values(state.cart).reduce((a,b)=>a+b,0); }
+  function selectedSum(){
+    return Object.entries(state.cart).reduce((sum,[id,q])=>{
+      const product=productById(id);
+      return sum + (product ? Number(product.price)*q : 0);
+    },0);
+  }
+  function productTotal(){ const combo=comboForQty(state.qty); return combo ? Number(combo.price) : selectedSum(); }
+  function savings(){ const combo=comboForQty(state.qty); return combo ? Math.max(0, selectedSum()-Number(combo.price)) : 0; }
+
+  function showToast(message){
+    toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);
+    showToast.timer=setTimeout(()=>toast.classList.remove("show"),2600);
+  }
+
+  // ── Carregar cardápio e combos do Supabase ──
+  async function loadCatalog(){
+    if(!supabase){
+      productsGrid.innerHTML='<p class="empty-state">O site ainda não está conectado ao banco de dados. Configure o supabase-config.js.</p>';
+      combosGrid.innerHTML='';
+      return;
+    }
+    try{
+      const [productsRes, combosRes] = await Promise.all([
+        supabase.from("products").select("*").eq("active", true).order("sort_order",{ascending:true}),
+        supabase.from("combos").select("*").eq("active", true).order("sort_order",{ascending:true})
+      ]);
+      if(productsRes.error) throw productsRes.error;
+      if(combosRes.error) throw combosRes.error;
+      state.products = productsRes.data || [];
+      state.combos = combosRes.data || [];
+      state.cart = {};
+      renderProducts();renderCombos();renderFlavors();renderSummary();
+    }catch(err){
+      productsGrid.innerHTML='<p class="empty-state">Não foi possível carregar o cardápio agora. Recarregue a página em instantes.</p>';
+      combosGrid.innerHTML='';
+    }
+    await loadDeliveryConfig();
+  }
+
+  // Frete: se ainda não existir "delivery_settings"/"delivery_tiers" no banco (ou a
+  // consulta falhar), cai nos valores padrão em DEFAULT_ORIGIN/DEFAULT_TIERS — o site
+  // nunca quebra por isso, só deixa de refletir edições feitas no painel.
+  async function loadDeliveryConfig(){
+    if(!supabase){ state.deliveryOrigin=DEFAULT_ORIGIN; state.deliveryTiers=DEFAULT_TIERS; return; }
+    try{
+      const [settingsRes, tiersRes] = await Promise.all([
+        supabase.from("delivery_settings").select("*").limit(1).maybeSingle(),
+        supabase.from("delivery_tiers").select("*").order("max_km",{ascending:true})
+      ]);
+      state.deliveryOrigin = (!settingsRes.error && settingsRes.data)
+        ? {lat:Number(settingsRes.data.origin_lat), lon:Number(settingsRes.data.origin_lon)}
+        : DEFAULT_ORIGIN;
+      state.deliveryTiers = (!tiersRes.error && tiersRes.data && tiersRes.data.length)
+        ? tiersRes.data
+        : DEFAULT_TIERS;
+    }catch(err){
+      state.deliveryOrigin=DEFAULT_ORIGIN; state.deliveryTiers=DEFAULT_TIERS;
+    }
+  }
+
+  function productImageMarkup(product){
+    if(product.image_url){
+      return `<img src="${escapeHtml(product.image_url)}" alt="Dindin de ${escapeHtml(product.name)} Gelofy" loading="lazy">`;
+    }
+    const initial = escapeHtml((product.name||"?").charAt(0).toUpperCase());
+    return `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--cream-2),var(--caramel-light));color:var(--espresso);font-family:var(--display);font-style:italic;font-size:2.6rem">${initial}</div>`;
+  }
+
+  function renderProducts(){
+    if(!state.products.length){
+      productsGrid.innerHTML='<p class="empty-state">Nenhum sabor ativo no momento.</p>';return;
+    }
+    productsGrid.innerHTML=state.products.map(product=>`
+      <article class="product reveal visible">
+        <div class="product-image">${productImageMarkup(product)}</div>
+        <div class="product-body">
+          <div class="product-top"><h3>${escapeHtml(product.name)}</h3><span class="price">${money(product.price)}</span></div>
+          <p>${escapeHtml(product.description||"")}</p>
+          <button class="btn btn-primary" type="button" data-flavor-id="${escapeHtml(product.id)}">Adicionar ao pedido</button>
+        </div>
+      </article>`).join("");
+  }
+
+  function renderCombos(){
+    if(!state.combos.length){
+      combosGrid.innerHTML='<p class="empty-state">Nenhum combo ativo no momento.</p>';return;
+    }
+    combosGrid.innerHTML=state.combos.map(combo=>{
+      const unit = combo.quantity ? Number(combo.price)/Number(combo.quantity) : 0;
+      return `
+      <article class="combo reveal visible${combo.featured?" featured":""}">
+        ${combo.featured?'<span class="combo-badge">★ Mais escolhido</span>':""}
+        <h3>${escapeHtml(combo.name)}</h3>
+        <div class="combo-price">${money(combo.price)}</div>
+        <div class="unit">${money(unit)} por unidade</div>
+        <button class="btn btn-primary" type="button" data-combo-qty="${escapeHtml(String(combo.quantity))}">Escolher ${escapeHtml(String(combo.quantity))}</button>
+      </article>`;
+    }).join("");
+  }
+
+  function renderFlavors(){
+    flavorList.innerHTML=state.products.map(product=>`
+      <div class="flavor">
+        <span class="flavor-name">${escapeHtml(product.name)}</span>
+        <div class="qty">
+          <button type="button" data-minus="${escapeHtml(product.id)}" aria-label="Diminuir ${escapeHtml(product.name)}">−</button>
+          <output aria-label="Quantidade de ${escapeHtml(product.name)}">${state.cart[product.id]||0}</output>
+          <button type="button" data-plus="${escapeHtml(product.id)}" aria-label="Aumentar ${escapeHtml(product.name)}">+</button>
+        </div>
+      </div>`).join("");
+  }
+
+  function renderSummary(){
+    qtyValue.textContent=String(state.qty);
+    const selected=Object.entries(state.cart).filter(([,q])=>q>0);
+    const count=totalSelected();
+    const complete=count===state.qty && count>0;
+
+    if(!selected.length){
+      summaryContent.innerHTML='<p class="empty-state">Escolha pelo menos um sabor para começar.</p>';
+      openCheckout.disabled=true;return;
+    }
+
+    const lines=selected.map(([id,q])=>`<div class="summary-line"><span>${q}× ${escapeHtml(productById(id)?.name||"Item")}</span><strong>${q}</strong></div>`).join("");
+    summaryContent.innerHTML=`
+      <div class="summary-line"><span>Quantidade</span><strong>${count}/${state.qty}</strong></div>
+      ${lines}
+      <div class="summary-total"><span>Total dos produtos</span><span>${money(productTotal())}</span></div>
+      ${savings()?`<div style="color:var(--success);font-size:.8rem;font-weight:700;margin-top:8px">Você economiza ${money(savings())} no combo.</div>`:""}
+      ${state.delivery?`<div class="summary-line" style="margin-top:10px"><span>Frete</span><strong>${money(state.delivery.price)}</strong></div><div class="summary-total"><span>Total com entrega</span><span>${money(productTotal()+state.delivery.price)}</span></div>`:""}
+      ${!complete?`<p style="color:var(--caramel-dark);font-size:.8rem;font-weight:700;margin:12px 0 0">Distribua exatamente ${state.qty} unidade${state.qty>1?"s":""} entre os sabores.</p>`:""}
+    `;
+    openCheckout.disabled=!complete;
+  }
+
+  function resetDelivery(){
+    state.delivery=null;deliveryResult.classList.remove("show");deliveryError.classList.remove("show");
+    sendWhatsApp.disabled=true;renderSummary();
+  }
+
+  function setQty(next){
+    const qty=Math.max(1,Math.min(CONFIG.maxQty,Number(next)||1));
+    state.qty=qty;
+    let remaining=qty;
+    for(const product of state.products){
+      const current=state.cart[product.id]||0;
+      const keep=Math.min(current,remaining);
+      if(keep>0) state.cart[product.id]=keep; else delete state.cart[product.id];
+      remaining-=keep;
+    }
+    resetDelivery();renderFlavors();
+  }
+
+  function changeFlavor(id,delta){
+    if(!productById(id))return;
+    const total=totalSelected(),current=state.cart[id]||0;
+    if(delta>0&&total>=state.qty){showToast(`Seu pedido já tem ${state.qty} unidade${state.qty>1?"s":""}.`);return}
+    if(delta<0&&current<=0)return;
+    const next=Math.max(0,current+delta);
+    if(next>0) state.cart[id]=next; else delete state.cart[id];
+    resetDelivery();renderFlavors();
+  }
+
+  function currentOrder(){
+    const items=Object.entries(state.cart).filter(([,q])=>q>0).map(([id,q])=>({
+      id, name: productById(id)?.name || "Item", qty:q
+    }));
+    return {qty:state.qty,items,total:productTotal(),savings:savings()};
+  }
+
+  function renderModalOrder(){
+    const order=currentOrder();
+    modalOrder.innerHTML=`
+      <strong>${order.qty} dindin${order.qty>1?"s":""}</strong>
+      ${order.items.map(item=>`<div class="order-mini-line">${item.qty}× ${escapeHtml(item.name)}</div>`).join("")}
+      <div class="modal-total">Produtos: ${money(order.total)}</div>
+      ${order.savings?`<div class="order-mini-line" style="color:var(--success);font-weight:700">Economia: ${money(order.savings)}</div>`:""}
+      ${state.delivery?`<div class="order-mini-line">Frete: ${money(state.delivery.price)} · ${state.delivery.km.toFixed(1).replace(".",",")} km</div><div class="modal-total">Total com entrega: ${money(order.total+state.delivery.price)}</div>`:"<div class=\"order-mini-line\" style=\"color:var(--muted);margin-top:8px\">Frete ainda não calculado.</div>"}
+    `;
+  }
+
+  function openModal(){
+    if(!state.products.length){showToast("O cardápio ainda está carregando.");return}
+    if(totalSelected()!==state.qty || totalSelected()===0){
+      $("#pedido").scrollIntoView({behavior:"smooth"});showToast(`Escolha exatamente ${state.qty} unidade${state.qty>1?"s":""}.`);return;
+    }
+    renderModalOrder();modal.classList.add("open");document.body.classList.add("is-locked");
+    setTimeout(()=>$("#customerName").focus(),50);
+  }
+
+  function closeModal(){modal.classList.remove("open");document.body.classList.remove("is-locked")}
+
+  function sanitize(value,max){
+    return String(value||"").replace(/[<>]/g,"").trim().slice(0,max);
+  }
+
+  function deliveryFee(km){
+    const tiers = state.deliveryTiers.length ? state.deliveryTiers : DEFAULT_TIERS;
+    for(const tier of tiers){ if(km<=Number(tier.max_km)) return Number(tier.price); }
+    return null;
+  }
+
+  function maxDeliveryKmLabel(){
+    const tiers = state.deliveryTiers.length ? state.deliveryTiers : DEFAULT_TIERS;
+    return tiers.length ? Number(tiers[tiers.length-1].max_km) : 25;
+  }
+
+  async function calculateDelivery(){
+    deliveryError.classList.remove("show");deliveryResult.classList.remove("show");sendWhatsApp.disabled=true;
+    const address=sanitize($("#customerAddress").value,300);
+    if(!address){showToast("Informe o endereço completo antes de calcular o frete.");$("#customerAddress").focus();return}
+
+    if(!navigator.geolocation){
+      deliveryStatusText.textContent="Seu navegador não oferece geolocalização.";
+      deliveryError.textContent="Não foi possível obter sua localização. Abra o site em um navegador compatível e com HTTPS.";
+      deliveryError.classList.add("show");return;
+    }
+
+    deliveryStatus.classList.add("is-loading");
+    deliveryStatusText.textContent="Solicitando localização do dispositivo…";
+    calculateBtn.disabled=true;
+
+    navigator.geolocation.getCurrentPosition(async (position)=>{
+      const lat=Number(position.coords.latitude),lon=Number(position.coords.longitude);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)){failDelivery("Localização inválida retornada pelo dispositivo.");return}
+
+      deliveryStatusText.textContent="Calculando a rota de carro…";
+      try{
+        const origin = state.deliveryOrigin || DEFAULT_ORIGIN;
+        const url=`${CONFIG.routingUrl}/${origin.lon},${origin.lat};${lon},${lat}?overview=false&alternatives=false&steps=false`;
+        const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),10000);
+        const response=await fetch(url,{signal:controller.signal,headers:{"Accept":"application/json"}});
+        clearTimeout(timer);
+        if(!response.ok)throw new Error("Serviço de rota indisponível.");
+        const data=await response.json();
+        if(data.code!=="Ok"||!data.routes?.[0])throw new Error("Rota não encontrada.");
+
+        const km=Number(data.routes[0].distance)/1000;
+        const price=deliveryFee(km);
+        if(!Number.isFinite(km)||price===null){failDelivery(`A distância calculada foi ${km.toFixed(1).replace(".",",")} km. A área máxima de entrega é ${maxDeliveryKmLabel()} km.`);return}
+
+        state.delivery={km,price};
+        deliveryPrice.textContent=money(price);
+        deliveryMeta.textContent=`Rota estimada: ${km.toFixed(1).replace(".",",")} km · limite de entrega: ${maxDeliveryKmLabel()} km.`;
+        deliveryResult.classList.add("show");
+        deliveryStatus.classList.remove("is-loading");
+        deliveryStatusText.textContent="Entrega calculada com sucesso.";
+        calculateBtn.disabled=false;
+        sendWhatsApp.disabled=false;
+        renderSummary();renderModalOrder();
+      }catch(error){
+        failDelivery(error.name==="AbortError"?"O cálculo demorou demais. Tente novamente.":"Não foi possível calcular a rota agora. Tente novamente em alguns segundos.");
+      }
+    },(error)=>{
+      const msg=error.code===1?"Permissão de localização negada. Autorize a localização para calcular o frete.":error.code===2?"Não foi possível determinar sua localização. Tente novamente.":"A localização demorou demais para responder.";
+      failDelivery(msg);
+    },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+  }
+
+  function failDelivery(message){
+    state.delivery=null;sendWhatsApp.disabled=true;calculateBtn.disabled=false;
+    deliveryStatus.classList.remove("is-loading");deliveryStatusText.textContent="Não foi possível concluir o cálculo.";
+    deliveryError.textContent=message;deliveryError.classList.add("show");renderSummary();
+  }
+
+  function sendOrder(){
+    const name=sanitize($("#customerName").value,80);
+    const phone=sanitize($("#customerPhone").value,20);
+    const address=sanitize($("#customerAddress").value,300);
+    const paymentMethod=sanitize($("#paymentMethod").value,80);
+    const order=currentOrder();
+
+    if(!name){showToast("Informe seu nome.");$("#customerName").focus();return}
+    if(!phone){showToast("Informe seu telefone.");$("#customerPhone").focus();return}
+    if(!address){showToast("Informe seu endereço completo.");$("#customerAddress").focus();return}
+    if(!paymentMethod){showToast("Informe a forma de pagamento.");$("#paymentMethod").focus();return}
+    if(!state.delivery){showToast("Calcule o frete antes de enviar.");return}
+
+    const flavors=order.items.map(item=>`${item.qty}× ${item.name}`).join(", ");
+    const message=[
+      "Olá, Gelofy! Quero fazer um pedido.",
+      "",
+      `Nome: ${name}`,
+      `Telefone: ${phone}`,
+      `Quantidade: ${order.qty}`,
+      `Sabores: ${flavors}`,
+      `Total: ${money(order.total)}`,
+      `Frete: ${money(state.delivery.price)}`,
+      `Total com frete: ${money(order.total+state.delivery.price)}`,
+      `Endereço completo: ${address}`,
+      `Formas de pagamento: ${paymentMethod}`
+    ].join("\n");
+
+    const url=`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(message)}`;
+    window.open(url,"_blank","noopener,noreferrer");closeModal();
+  }
+
+  function setupEvents(){
+    $("#qtyMinus").addEventListener("click",()=>setQty(state.qty-1));
+    $("#qtyPlus").addEventListener("click",()=>setQty(state.qty+1));
+    flavorList.addEventListener("click",(e)=>{
+      const minus=e.target.closest("[data-minus]"),plus=e.target.closest("[data-plus]");
+      if(minus)changeFlavor(minus.dataset.minus,-1);if(plus)changeFlavor(plus.dataset.plus,1);
+    });
+
+    productsGrid.addEventListener("click",(e)=>{
+      const button=e.target.closest("[data-flavor-id]");
+      if(!button)return;
+      const id=button.dataset.flavorId, product=productById(id);
+      if(!product)return;
+      setQty(1);state.cart={[id]:1};resetDelivery();renderFlavors();
+      $("#pedido").scrollIntoView({behavior:"smooth"});showToast(`${product.name} adicionado.`);
+    });
+    combosGrid.addEventListener("click",(e)=>{
+      const button=e.target.closest("[data-combo-qty]");
+      if(!button)return;
+      setQty(Number(button.dataset.comboQty));$("#pedido").scrollIntoView({behavior:"smooth"});
+    });
+
+    $$("[data-open-order]").forEach(button=>button.addEventListener("click",openModal));
+    openCheckout.addEventListener("click",openModal);
+    $("#closeModal").addEventListener("click",closeModal);$("#cancelModal").addEventListener("click",closeModal);
+    calculateBtn.addEventListener("click",calculateDelivery);sendWhatsApp.addEventListener("click",sendOrder);
+    $("#customerAddress").addEventListener("input",()=>{if(state.delivery)resetDelivery()});
+    $("#customerName").addEventListener("input",()=>{if(state.delivery)renderModalOrder()});
+    $("#customerPhone").addEventListener("input",()=>{if(state.delivery)renderModalOrder()});
+    modal.addEventListener("click",(e)=>{if(e.target===modal)closeModal()});
+    document.addEventListener("keydown",(e)=>{if(e.key==="Escape"&&modal.classList.contains("open"))closeModal()});
+    window.addEventListener("scroll",()=>$(".header").classList.toggle("scrolled",window.scrollY>8),{passive:true});
+  }
+
+  function setupReveal(){
+    const elements=$$(".reveal");
+    if(!("IntersectionObserver" in window)||window.matchMedia("(prefers-reduced-motion: reduce)").matches){elements.forEach(el=>el.classList.add("visible"));return}
+    const observer=new IntersectionObserver((entries,obs)=>{
+      entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");obs.unobserve(entry.target)}})
+    },{threshold:.08,rootMargin:"0px 0px -35px 0px"});
+    elements.forEach(el=>observer.observe(el));
+  }
+
+  renderSummary();setupEvents();setupReveal();loadCatalog();
+})();
+</script>
+</body>
+</html>
