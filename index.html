@@ -318,7 +318,7 @@
       <div class="faq-list reveal">
         <details><summary>Quanto custa um dindin?</summary><p>O dindin individual custa R$ 7,00. Também existem combos de 3 por R$ 20, 5 por R$ 33 e 10 por R$ 65.</p></details>
         <details><summary>Posso misturar os sabores no combo?</summary><p>Sim. O montador de pedido permite distribuir a quantidade entre Nutella, Paçoca, Cappuccino, Oreo e Doce de leite.</p></details>
-        <details><summary>Como o frete é calculado?</summary><p>O site calcula a rota de carro entre a localização autorizada no dispositivo e o ponto de saída da Gelofy. A taxa segue faixas de distância de até 25 km.</p></details>
+        <details><summary>Como o frete é calculado?</summary><p>O site calcula a rota de moto entre a localização autorizada no dispositivo e o ponto de saída da Gelofy. A taxa segue faixas de distância de até 25 km.</p></details>
         <details><summary>Qual é a forma de pagamento?</summary><p>Você informa a forma de pagamento no campo do pedido antes de enviar para o WhatsApp.</p></details>
       </div>
     </div>
@@ -646,7 +646,7 @@
       const lat=Number(position.coords.latitude),lon=Number(position.coords.longitude);
       if(!Number.isFinite(lat)||!Number.isFinite(lon)){failDelivery("Localização inválida retornada pelo dispositivo.");return}
 
-      deliveryStatusText.textContent="Calculando a rota de carro…";
+      deliveryStatusText.textContent="Calculando a rota de moto…";
       try{
         const origin = state.deliveryOrigin || DEFAULT_ORIGIN;
         const url=`${CONFIG.routingUrl}/${origin.lon},${origin.lat};${lon},${lat}?overview=false&alternatives=false&steps=false`;
