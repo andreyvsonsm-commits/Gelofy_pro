@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F8F1E7">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/png" href="gelofy.png">
+  <title>Gelofy | Painel administrativo</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --cream:#F8F1E7;--cream-2:#EFE1C8;--paper:#FFFDF9;
+      --espresso:#20140D;--espresso-2:#3A2416;--caramel:#A8622A;--caramel-dark:#7A4318;--caramel-light:#E3AD6E;
+      --ink:#241708;--muted:#786353;--line:rgba(32,20,13,.12);--success:#1d7b4d;--danger:#a83d32;
+      --radius:20px;--radius-sm:13px;--shadow-sm:0 10px 26px rgba(32,20,13,.1);
+      --ease:cubic-bezier(.22,1,.36,1);
+      --font:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+      --display:"Instrument Serif",Georgia,serif;
+      --mono:"Space Grotesk",var(--font);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:var(--font);background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased}
+    img{display:block;max-width:100%}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}
+
+    header{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 26px;border-bottom:1px solid var(--line);background:rgba(255,253,249,.92);backdrop-filter:blur(14px)}
+    .brand{display:inline-flex;align-items:center;gap:10px;font-weight:800}
+    .brand img{width:32px;height:32px;object-fit:contain}
+    .brand span{font-family:var(--mono);font-weight:700;font-size:1.1rem}
+    .logout{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 18px;font-size:.82rem;font-weight:700;cursor:pointer;color:var(--ink);transition:border-color .2s var(--ease)}
+    .logout:hover{border-color:var(--caramel)}
+
+    .wrap{max-width:1080px;margin:0 auto;padding:30px 20px 80px}
+    .tabs{display:flex;gap:8px;margin-bottom:26px;border-bottom:1px solid var(--line)}
+    .tab{border:0;background:none;padding:12px 6px;margin-right:22px;font-weight:700;font-size:.92rem;color:var(--muted);position:relative;cursor:pointer}
+    .tab::after{content:"";position:absolute;left:0;right:100%;bottom:-1px;height:2px;background:var(--caramel);transition:right .2s var(--ease)}
+    .tab.active{color:var(--ink)}.tab.active::after{right:0}
+
+    .panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+    .panel-head h1{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.9rem;margin:0}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:999px;border:1px solid transparent;font-weight:700;font-size:.85rem;transition:transform .2s var(--ease),background .2s var(--ease)}
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--caramel);color:#fff}.btn-primary:hover{background:var(--caramel-dark)}
+    .btn-light{background:#fff;color:var(--ink);border-color:var(--line)}.btn-light:hover{border-color:var(--caramel)}
+    .btn-danger{background:#fff;color:var(--danger);border-color:rgba(168,61,50,.3)}.btn-danger:hover{background:rgba(168,61,50,.06)}
+    .btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .btn-sm{min-height:36px;padding:0 14px;font-size:.78rem}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:14px}
+    @media (min-width:720px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (min-width:1020px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+    .item-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+    .item-media{aspect-ratio:4/3;background:var(--cream-2);position:relative}
+    .item-media img{width:100%;height:100%;object-fit:cover}
+    .item-media .placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-style:italic;font-size:2.4rem;color:var(--caramel-dark);background:linear-gradient(135deg,var(--cream-2),var(--caramel-light))}
+    .status-pill{position:absolute;top:10px;left:10px;padding:5px 10px;border-radius:999px;font-size:.68rem;font-weight:800;letter-spacing:.03em}
+    .status-pill.active{background:rgba(29,123,77,.14);color:var(--success)}
+    .status-pill.inactive{background:rgba(120,99,83,.16);color:var(--muted)}
+    .featured-pill{position:absolute;top:10px;right:10px;background:var(--espresso);color:var(--caramel-light);padding:5px 10px;border-radius:999px;font-size:.68rem;font-weight:800}
+    .item-body{padding:16px;display:flex;flex-direction:column;gap:6px;flex:1}
+    .item-body h3{margin:0;font-size:1.02rem}
+    .item-body .meta{font-family:var(--mono);color:var(--caramel-dark);font-weight:700;font-size:.92rem}
+    .item-body .desc{color:var(--muted);font-size:.82rem;flex:1}
+    .item-actions{display:flex;gap:8px;margin-top:8px}
+
+    .empty-state{color:var(--muted);font-size:.9rem;padding:30px 0;text-align:center}
+    .loading-state{display:flex;align-items:center;justify-content:center;min-height:60vh;color:var(--muted);font-size:.9rem}
+
+    .modal-backdrop{position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(20,12,7,.55);backdrop-filter:blur(8px)}
+    .modal-backdrop.open{display:flex}
+    .modal{width:min(560px,100%);max-height:min(92vh,820px);overflow:auto;background:var(--paper);border-radius:22px;padding:24px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .modal-header h2{font-family:var(--display);font-style:italic;font-weight:400;font-size:1.6rem;margin:0}
+    .close{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#fff;font-size:1.3rem}
+
+    .form-grid{display:grid;grid-template-columns:1fr;gap:13px}
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field.row{flex-direction:row;align-items:center;gap:10px}
+    .field label{font-size:.78rem;font-weight:700}
+    .field input[type=text],.field input[type=number],.field textarea{width:100%;border:1px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff;color:var(--ink);outline:0}
+    .field input:focus,.field textarea:focus{border-color:var(--caramel);box-shadow:0 0 0 3px rgba(168,98,42,.12)}
+    .field textarea{min-height:70px;resize:vertical}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+
+    .media-field{border:1px dashed var(--line);border-radius:14px;padding:13px;display:flex;flex-direction:column;gap:10px}
+    .media-preview{display:flex;align-items:center;gap:12px}
+    .media-preview img,.media-preview video{width:60px;height:60px;object-fit:cover;border-radius:10px;background:var(--cream-2)}
+    .media-preview .no-media{width:60px;height:60px;border-radius:10px;background:var(--cream-2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.68rem;text-align:center;padding:4px}
+    .media-actions{display:flex;gap:8px;flex-wrap:wrap;font-size:.78rem}
+    .media-actions label{border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;font-weight:700;background:#fff}
+    .media-actions label:hover{border-color:var(--caramel)}
+    .media-actions input[type=file]{display:none}
+
+    .form-error{display:none;color:var(--danger);font-size:.82rem;font-weight:600}
+    .form-error.show{display:block}
+    .modal-actions{display:flex;gap:10px;margin-top:20px}
+    .modal-actions .btn{flex:1}
+
+    .spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite;display:none}
+    .btn-light .spinner{border-color:var(--line);border-top-color:var(--ink)}
+    .is-loading .spinner{display:inline-block}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .toast{position:fixed;left:50%;bottom:25px;z-index:500;transform:translate(-50%,20px);background:var(--espresso);color:#fff;padding:12px 17px;border-radius:999px;opacity:0;pointer-events:none;transition:.28s var(--ease);font-size:.82rem;font-weight:600}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div id="loadingState" class="loading-state">Verificando sessão…</div>
+
+  <div id="adminShell" style="display:none">
+    <header>
+      <a class="brand" href="admin.html"><img src="gelofy.png" alt="Gelofy"><span>Gelofy Admin</span></a>
+      <button class="logout" id="logoutBtn" type="button">Sair</button>
+    </header>
+
+    <div class="wrap">
+      <div class="tabs">
+        <button class="tab active" type="button" data-tab="products">Produtos</button>
+        <button class="tab" type="button" data-tab="combos">Combos</button>
+        <button class="tab" type="button" data-tab="delivery">Frete</button>
+      </div>
+
+      <section id="productsPanel">
+        <div class="panel-head">
+          <h1>Produtos</h1>
+          <button class="btn btn-primary" type="button" id="newProductBtn">+ Novo produto</button>
+        </div>
+        <div class="grid" id="productsList"><p class="empty-state">Carregando…</p></div>
+      </section>
+
+      <section id="combosPanel" style="display:none">
+        <div class="panel-head">
+          <h1>Combos</h1>
+          <button class="btn btn-primary" type="button" id="newComboBtn">+ Novo combo</button>
+        </div>
+        <div class="grid" id="combosList"><p class="empty-state">Carregando…</p></div>
+      </section>
+
+      <section id="deliveryPanel" style="display:none">
+        <div class="panel-head">
+          <h1>Endereço de origem</h1>
+        </div>
+        <div class="item-card" style="padding:20px;margin-bottom:32px;max-width:460px">
+          <form id="originForm" class="form-grid" novalidate>
+            <p style="color:var(--muted);font-size:.82rem;margin:0 0 4px">É a partir daqui que a rota até o cliente é calculada.</p>
+            <div class="two-col">
+              <div class="field"><label for="originLat">Latitude</label><input id="originLat" type="text" inputmode="decimal" required></div>
+              <div class="field"><label for="originLon">Longitude</label><input id="originLon" type="text" inputmode="decimal" required></div>
+            </div>
+            <p class="form-error" id="originFormError"></p>
+            <button type="submit" class="btn btn-primary" id="saveOriginBtn" style="align-self:flex-start"><span class="spinner" aria-hidden="true"></span><span>Salvar endereço</span></button>
+          </form>
+        </div>
+
+        <div class="panel-head">
+          <h1>Faixas de frete</h1>
+          <button class="btn btn-primary" type="button" id="newTierBtn">+ Nova faixa</button>
+        </div>
+        <p style="color:var(--muted);font-size:.82rem;margin:-10px 0 16px">A última faixa (maior km) define o limite máximo de entrega. Distâncias além dela são recusadas automaticamente no site.</p>
+        <div class="grid" id="tiersList"><p class="empty-state">Carregando…</p></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="productModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header"><h2 id="productModalTitle">Novo produto</h2><button class="close" type="button" data-close-product>×</button></div>
+      <form id="productForm" novalidate>
+        <input type="hidden" id="productId">
+        <input type="hidden" id="productImageUrl">
+        <input type="hidden" id="productVideoUrl">
+        <div class="form-grid">
+          <div class="field"><label for="productName">Nome do sabor</label><input id="productName" type="text" maxlength="60" required></div>
+          <div class="field"><label for="productDescription">Descrição</label><textarea id="productDescription" maxlength="200" placeholder="Aparece embaixo do nome no cardápio"></textarea></div>
+          <div class="two-col">
+            <div class="field"><label for="productPrice">Preço (R$)</label><input id="productPrice" type="number" min="0" step="0.01" required></div>
+            <div class="field"><label for="productSort">Ordem no cardápio</label><input id="productSort" type="number" min="0" step="1" value="0"></div>
+          </div>
+          <div class="field row"><input id="productActive" type="checkbox" checked><label for="productActive">Ativo (visível no site)</label></div>
+
+          <div class="media-field">
+            <label style="font-size:.78rem;font-weight:700">Foto do produto</label>
+            <div class="media-preview" id="productImagePreview"><div class="no-media">sem foto</div></div>
+            <div class="media-actions">
+              <label>Enviar foto<input type="file" id="productImageInput" accept="image/*"></label>
+              <button type="button" class="btn btn-light btn-sm" id="removeProductImage">Remover foto</button>
+            </div>
+          </div>
+
+          <div class="media-field">
+            <label style="font-size:.78rem;font-weight:700">Vídeo do produto (opcional)</label>
+            <div class="media-preview" id="productVideoPreview"><div class="no-media">sem vídeo</div></div>
+            <div class="media-actions">
+              <label>Enviar vídeo<input type="file" id="productVideoInput" accept="video/*"></label>
+              <button type="button" class="btn btn-light btn-sm" id="removeProductVideo">Remover vídeo</button>
+            </div>
+          </div>
+
+          <p class="form-error" id="productFormError"></p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-light" data-close-product>Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveProductBtn"><span class="spinner" aria-hidden="true"></span><span>Salvar</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="comboModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header"><h2 id="comboModalTitle">Novo combo</h2><button class="close" type="button" data-close-combo>×</button></div>
+      <form id="comboForm" novalidate>
+        <input type="hidden" id="comboId">
+        <div class="form-grid">
+          <div class="field"><label for="comboName">Nome do combo</label><input id="comboName" type="text" maxlength="60" required placeholder="Ex.: Combo 5"></div>
+          <div class="two-col">
+            <div class="field"><label for="comboQuantity">Quantidade de dindins</label><input id="comboQuantity" type="number" min="1" step="1" required></div>
+            <div class="field"><label for="comboPrice">Preço do combo (R$)</label><input id="comboPrice" type="number" min="0" step="0.01" required></div>
+          </div>
+          <div class="field"><label for="comboSort">Ordem de exibição</label><input id="comboSort" type="number" min="0" step="1" value="0"></div>
+          <div class="field row"><input id="comboFeatured" type="checkbox"><label for="comboFeatured">Destacar como "Mais escolhido"</label></div>
+          <div class="field row"><input id="comboActive" type="checkbox" checked><label for="comboActive">Ativo (visível no site)</label></div>
+          <p class="form-error" id="comboFormError"></p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-light" data-close-combo>Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveComboBtn"><span class="spinner" aria-hidden="true"></span><span>Salvar</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="tierModal" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-header"><h2 id="tierModalTitle">Nova faixa</h2><button class="close" type="button" data-close-tier>×</button></div>
+      <form id="tierForm" novalidate>
+        <input type="hidden" id="tierId">
+        <div class="form-grid">
+          <div class="two-col">
+            <div class="field"><label for="tierMaxKm">Até quantos km</label><input id="tierMaxKm" type="number" min="0.1" step="0.1" required></div>
+            <div class="field"><label for="tierPrice">Preço do frete (R$)</label><input id="tierPrice" type="number" min="0" step="0.01" required></div>
+          </div>
+          <p class="form-error" id="tierFormError"></p>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-light" data-close-tier>Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="saveTierBtn"><span class="spinner" aria-hidden="true"></span><span>Salvar</span></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script>
+  (() => {
+    "use strict";
+
+    const loadingState = document.getElementById("loadingState");
+    const adminShell = document.getElementById("adminShell");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const toast = document.getElementById("toast");
+    const MEDIA_BUCKET = "gelofy-media";
+
+    const isConfigured =
+      window.SUPABASE_URL && !window.SUPABASE_URL.includes("COLE_AQUI") &&
+      window.SUPABASE_ANON_KEY && !window.SUPABASE_ANON_KEY.includes("COLE_AQUI");
+
+    if (!isConfigured) {
+      loadingState.textContent = "Configure o supabase-config.js primeiro (veja o guia de setup).";
+      return;
+    }
+
+    const supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    const $ = (s) => document.querySelector(s);
+    const money = (v) => Number(v || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+    function showToast(message) {
+      toast.textContent = message; toast.classList.add("show"); clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]));
+    }
+
+    async function guardRoute() {
+      const { data } = await supabase.auth.getSession();
+      if (!data?.session) { window.location.href = "login.html"; return; }
+      loadingState.style.display = "none";
+      adminShell.style.display = "block";
+      loadProducts(); loadCombos(); loadOrigin(); loadTiers();
+    }
+    guardRoute();
+
+    logoutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "login.html";
+    });
+
+    const panelsByTab = { products: "productsPanel", combos: "combosPanel", delivery: "deliveryPanel" };
+    document.querySelectorAll(".tab").forEach((tab) => tab.addEventListener("click", () => {
+      document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+      Object.entries(panelsByTab).forEach(([key, panelId]) => {
+        document.getElementById(panelId).style.display = key === tab.dataset.tab ? "block" : "none";
+      });
+    }));
+
+    function pathFromPublicUrl(url) {
+      if (!url) return null;
+      const marker = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
+      const idx = url.indexOf(marker);
+      return idx === -1 ? null : url.slice(idx + marker.length);
+    }
+    async function uploadMedia(file, folder) {
+      const ext = (file.name.split(".").pop() || "bin").toLowerCase();
+      const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+      const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, { cacheControl: "3600", upsert: false });
+      if (error) throw error;
+      const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+      return data.publicUrl;
+    }
+    async function deleteMediaByUrl(url) {
+      const path = pathFromPublicUrl(url);
+      if (!path) return;
+      await supabase.storage.from(MEDIA_BUCKET).remove([path]);
+    }
+
+    let products = [];
+    const productsList = $("#productsList");
+    const productModal = $("#productModal");
+    const productForm = $("#productForm");
+    const productFormError = $("#productFormError");
+    const saveProductBtn = $("#saveProductBtn");
+
+    let productImagePendingFile = null, productImageRemoved = false;
+    let productVideoPendingFile = null, productVideoRemoved = false;
+
+    async function loadProducts() {
+      productsList.innerHTML = '<p class="empty-state">Carregando…</p>';
+      const { data, error } = await supabase.from("products").select("*").order("sort_order", { ascending: true });
+      if (error) { productsList.innerHTML = '<p class="empty-state">Não foi possível carregar os produtos.</p>'; return; }
+      products = data || [];
+      renderProducts();
+    }
+
+    function renderProducts() {
+      if (!products.length) { productsList.innerHTML = '<p class="empty-state">Nenhum produto cadastrado ainda.</p>'; return; }
+      productsList.innerHTML = products.map((p) => `
+        <article class="item-card">
+          <div class="item-media">
+            ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" alt="${escapeHtml(p.name)}">` : `<div class="placeholder">${escapeHtml((p.name || "?").charAt(0).toUpperCase())}</div>`}
+            <span class="status-pill ${p.active ? "active" : "inactive"}">${p.active ? "Ativo" : "Inativo"}</span>
+          </div>
+          <div class="item-body">
+            <h3>${escapeHtml(p.name)}</h3>
+            <span class="meta">${money(p.price)}</span>
+            <p class="desc">${escapeHtml(p.description || "")}</p>
+            <div class="item-actions">
+              <button class="btn btn-light btn-sm" type="button" data-edit-product="${p.id}">Editar</button>
+              <button class="btn btn-danger btn-sm" type="button" data-delete-product="${p.id}">Excluir</button>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    productsList.addEventListener("click", (e) => {
+      const editBtn = e.target.closest("[data-edit-product]");
+      const deleteBtn = e.target.closest("[data-delete-product]");
+      if (editBtn) openProductForm(products.find((p) => p.id === editBtn.dataset.editProduct));
+      if (deleteBtn) deleteProduct(deleteBtn.dataset.deleteProduct);
+    });
+
+    function renderMediaPreview(container, url, kind) {
+      if (!url) { container.innerHTML = `<div class="no-media">sem ${kind === "video" ? "vídeo" : "foto"}</div>`; return; }
+      container.innerHTML = kind === "video"
+        ? `<video src="${escapeHtml(url)}" muted></video>`
+        : `<img src="${escapeHtml(url)}" alt="">`;
+    }
+
+    function openProductForm(product) {
+      productForm.reset();
+      productFormError.classList.remove("show");
+      productImagePendingFile = null; productImageRemoved = false;
+      productVideoPendingFile = null; productVideoRemoved = false;
+
+      $("#productModalTitle").textContent = product ? "Editar produto" : "Novo produto";
+      $("#productId").value = product?.id || "";
+      $("#productName").value = product?.name || "";
+      $("#productDescription").value = product?.description || "";
+      $("#productPrice").value = product?.price ?? "";
+      $("#productSort").value = product?.sort_order ?? 0;
+      $("#productActive").checked = product ? !!product.active : true;
+      $("#productImageUrl").value = product?.image_url || "";
+      $("#productVideoUrl").value = product?.video_url || "";
+      renderMediaPreview($("#productImagePreview"), product?.image_url, "image");
+      renderMediaPreview($("#productVideoPreview"), product?.video_url, "video");
+
+      productModal.classList.add("open");
+      setTimeout(() => $("#productName").focus(), 50);
+    }
+
+    $("#newProductBtn").addEventListener("click", () => openProductForm(null));
+    document.querySelectorAll("[data-close-product]").forEach((b) => b.addEventListener("click", () => productModal.classList.remove("open")));
+    productModal.addEventListener("click", (e) => { if (e.target === productModal) productModal.classList.remove("open"); });
+
+    $("#productImageInput").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      productImagePendingFile = file; productImageRemoved = false;
+      renderMediaPreview($("#productImagePreview"), URL.createObjectURL(file), "image");
+    });
+    $("#removeProductImage").addEventListener("click", () => {
+      productImagePendingFile = null; productImageRemoved = true;
+      renderMediaPreview($("#productImagePreview"), null, "image");
+    });
+    $("#productVideoInput").addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      productVideoPendingFile = file; productVideoRemoved = false;
+      renderMediaPreview($("#productVideoPreview"), URL.createObjectURL(file), "video");
+    });
+    $("#removeProductVideo").addEventListener("click", () => {
+      productVideoPendingFile = null; productVideoRemoved = true;
+      renderMediaPreview($("#productVideoPreview"), null, "video");
+    });
+
+    productForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      productFormError.classList.remove("show");
+
+      const name = $("#productName").value.trim();
+      const price = Number($("#productPrice").value);
+      if (!name) { productFormError.textContent = "Informe o nome do sabor."; productFormError.classList.add("show"); return; }
+      if (!Number.isFinite(price) || price < 0) { productFormError.textContent = "Informe um preço válido."; productFormError.classList.add("show"); return; }
+
+      saveProductBtn.disabled = true; saveProductBtn.classList.add("is-loading");
+      try {
+        const id = $("#productId").value || null;
+        let image_url = $("#productImageUrl").value || null;
+        let video_url = $("#productVideoUrl").value || null;
+        const previousImage = image_url, previousVideo = video_url;
+
+        if (productImagePendingFile) image_url = await uploadMedia(productImagePendingFile, "products");
+        else if (productImageRemoved) image_url = null;
+
+        if (productVideoPendingFile) video_url = await uploadMedia(productVideoPendingFile, "products");
+        else if (productVideoRemoved) video_url = null;
+
+        const payload = {
+          name, description: $("#productDescription").value.trim() || null,
+          price, sort_order: Number($("#productSort").value) || 0,
+          active: $("#productActive").checked, image_url, video_url
+        };
+
+        if (id) await supabase.from("products").update(payload).eq("id", id).throwOnError();
+        else await supabase.from("products").insert([payload]).throwOnError();
+
+        if (productImagePendingFile && previousImage) await deleteMediaByUrl(previousImage);
+        if (productImageRemoved && previousImage) await deleteMediaByUrl(previousImage);
+        if (productVideoPendingFile && previousVideo) await deleteMediaByUrl(previousVideo);
+        if (productVideoRemoved && previousVideo) await deleteMediaByUrl(previousVideo);
+
+        productModal.classList.remove("open");
+        showToast(id ? "Produto atualizado." : "Produto criado.");
+        await loadProducts();
+      } catch (err) {
+        productFormError.textContent = "Não foi possível salvar. Tente novamente.";
+        productFormError.classList.add("show");
+      } finally {
+        saveProductBtn.disabled = false; saveProductBtn.classList.remove("is-loading");
+      }
+    });
+
+    async function deleteProduct(id) {
+      const product = products.find((p) => p.id === id);
+      if (!product) return;
+      if (!confirm(`Excluir "${product.name}"? Essa ação não pode ser desfeita.`)) return;
+      try {
+        await supabase.from("products").delete().eq("id", id).throwOnError();
+        if (product.image_url) await deleteMediaByUrl(product.image_url);
+        if (product.video_url) await deleteMediaByUrl(product.video_url);
+        showToast("Produto excluído.");
+        await loadProducts();
+      } catch (err) {
+        showToast("Não foi possível excluir agora.");
+      }
+    }
+
+    let combos = [];
+    const combosList = $("#combosList");
+    const comboModal = $("#comboModal");
+    const comboForm = $("#comboForm");
+    const comboFormError = $("#comboFormError");
+    const saveComboBtn = $("#saveComboBtn");
+
+    async function loadCombos() {
+      combosList.innerHTML = '<p class="empty-state">Carregando…</p>';
+      const { data, error } = await supabase.from("combos").select("*").order("sort_order", { ascending: true });
+      if (error) { combosList.innerHTML = '<p class="empty-state">Não foi possível carregar os combos.</p>'; return; }
+      combos = data || [];
+      renderCombos();
+    }
+
+    function renderCombos() {
+      if (!combos.length) { combosList.innerHTML = '<p class="empty-state">Nenhum combo cadastrado ainda.</p>'; return; }
+      combosList.innerHTML = combos.map((c) => `
+        <article class="item-card">
+          <div class="item-media">
+            <div class="placeholder" style="font-family:var(--mono);font-style:normal;font-size:1.6rem">${escapeHtml(String(c.quantity))}×</div>
+            <span class="status-pill ${c.active ? "active" : "inactive"}">${c.active ? "Ativo" : "Inativo"}</span>
+            ${c.featured ? '<span class="featured-pill">★ Destaque</span>' : ""}
+          </div>
+          <div class="item-body">
+            <h3>${escapeHtml(c.name)}</h3>
+            <span class="meta">${money(c.price)} · ${escapeHtml(String(c.quantity))} unidades</span>
+            <div class="item-actions" style="margin-top:auto">
+              <button class="btn btn-light btn-sm" type="button" data-edit-combo="${c.id}">Editar</button>
+              <button class="btn btn-danger btn-sm" type="button" data-delete-combo="${c.id}">Excluir</button>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    combosList.addEventListener("click", (e) => {
+      const editBtn = e.target.closest("[data-edit-combo]");
+      const deleteBtn = e.target.closest("[data-delete-combo]");
+      if (editBtn) openComboForm(combos.find((c) => c.id === editBtn.dataset.editCombo));
+      if (deleteBtn) deleteCombo(deleteBtn.dataset.deleteCombo);
+    });
+
+    function openComboForm(combo) {
+      comboForm.reset();
+      comboFormError.classList.remove("show");
+      $("#comboModalTitle").textContent = combo ? "Editar combo" : "Novo combo";
+      $("#comboId").value = combo?.id || "";
+      $("#comboName").value = combo?.name || "";
+      $("#comboQuantity").value = combo?.quantity ?? "";
+      $("#comboPrice").value = combo?.price ?? "";
+      $("#comboSort").value = combo?.sort_order ?? 0;
+      $("#comboFeatured").checked = !!combo?.featured;
+      $("#comboActive").checked = combo ? !!combo.active : true;
+      comboModal.classList.add("open");
+      setTimeout(() => $("#comboName").focus(), 50);
+    }
+
+    $("#newComboBtn").addEventListener("click", () => openComboForm(null));
+    document.querySelectorAll("[data-close-combo]").forEach((b) => b.addEventListener("click", () => comboModal.classList.remove("open")));
+    comboModal.addEventListener("click", (e) => { if (e.target === comboModal) comboModal.classList.remove("open"); });
+
+    comboForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      comboFormError.classList.remove("show");
+
+      const name = $("#comboName").value.trim();
+      const quantity = Number($("#comboQuantity").value);
+      const price = Number($("#comboPrice").value);
+      if (!name) { comboFormError.textContent = "Informe o nome do combo."; comboFormError.classList.add("show"); return; }
+      if (!Number.isInteger(quantity) || quantity < 1) { comboFormError.textContent = "Informe uma quantidade válida."; comboFormError.classList.add("show"); return; }
+      if (!Number.isFinite(price) || price < 0) { comboFormError.textContent = "Informe um preço válido."; comboFormError.classList.add("show"); return; }
+
+      saveComboBtn.disabled = true; saveComboBtn.classList.add("is-loading");
+      try {
+        const id = $("#comboId").value || null;
+        const payload = {
+          name, quantity, price,
+          sort_order: Number($("#comboSort").value) || 0,
+          featured: $("#comboFeatured").checked,
+          active: $("#comboActive").checked
+        };
+        if (id) await supabase.from("combos").update(payload).eq("id", id).throwOnError();
+        else await supabase.from("combos").insert([payload]).throwOnError();
+
+        comboModal.classList.remove("open");
+        showToast(id ? "Combo atualizado." : "Combo criado.");
+        await loadCombos();
+      } catch (err) {
+        comboFormError.textContent = "Não foi possível salvar. Tente novamente.";
+        comboFormError.classList.add("show");
+      } finally {
+        saveComboBtn.disabled = false; saveComboBtn.classList.remove("is-loading");
+      }
+    });
+
+    async function deleteCombo(id) {
+      const combo = combos.find((c) => c.id === id);
+      if (!combo) return;
+      if (!confirm(`Excluir "${combo.name}"? Essa ação não pode ser desfeita.`)) return;
+      try {
+        await supabase.from("combos").delete().eq("id", id).throwOnError();
+        showToast("Combo excluído.");
+        await loadCombos();
+      } catch (err) {
+        showToast("Não foi possível excluir agora.");
+      }
+    }
+
+    // ═══════════════════ FRETE: ENDEREÇO DE ORIGEM ═══════════════════
+    const originForm = $("#originForm");
+    const originFormError = $("#originFormError");
+    const saveOriginBtn = $("#saveOriginBtn");
+    let originRowId = null;
+
+    async function loadOrigin() {
+      const { data, error } = await supabase.from("delivery_settings").select("*").limit(1).maybeSingle();
+      if (error || !data) return;
+      originRowId = data.id;
+      $("#originLat").value = data.origin_lat;
+      $("#originLon").value = data.origin_lon;
+    }
+
+    originForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      originFormError.classList.remove("show");
+      const lat = Number($("#originLat").value);
+      const lon = Number($("#originLon").value);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+        originFormError.textContent = "Informe latitude e longitude válidas.";
+        originFormError.classList.add("show");
+        return;
+      }
+      saveOriginBtn.disabled = true; saveOriginBtn.classList.add("is-loading");
+      try {
+        if (originRowId) {
+          await supabase.from("delivery_settings").update({ origin_lat: lat, origin_lon: lon }).eq("id", originRowId).throwOnError();
+        } else {
+          const { data } = await supabase.from("delivery_settings").insert([{ origin_lat: lat, origin_lon: lon }]).select().throwOnError();
+          originRowId = data?.[0]?.id || null;
+        }
+        showToast("Endereço de origem atualizado.");
+      } catch (err) {
+        originFormError.textContent = "Não foi possível salvar. Tente novamente.";
+        originFormError.classList.add("show");
+      } finally {
+        saveOriginBtn.disabled = false; saveOriginBtn.classList.remove("is-loading");
+      }
+    });
+
+    // ═══════════════════ FRETE: FAIXAS DE DISTÂNCIA ═══════════════════
+    let tiers = [];
+    const tiersList = $("#tiersList");
+    const tierModal = $("#tierModal");
+    const tierForm = $("#tierForm");
+    const tierFormError = $("#tierFormError");
+    const saveTierBtn = $("#saveTierBtn");
+
+    async function loadTiers() {
+      tiersList.innerHTML = '<p class="empty-state">Carregando…</p>';
+      const { data, error } = await supabase.from("delivery_tiers").select("*").order("max_km", { ascending: true });
+      if (error) { tiersList.innerHTML = '<p class="empty-state">Não foi possível carregar as faixas de frete.</p>'; return; }
+      tiers = data || [];
+      renderTiers();
+    }
+
+    function renderTiers() {
+      if (!tiers.length) { tiersList.innerHTML = '<p class="empty-state">Nenhuma faixa cadastrada ainda.</p>'; return; }
+      const maxTierId = tiers[tiers.length - 1]?.id;
+      tiersList.innerHTML = tiers.map((t) => `
+        <article class="item-card">
+          <div class="item-media">
+            <div class="placeholder" style="font-family:var(--mono);font-style:normal;font-size:1.3rem;text-align:center;padding:10px">até ${escapeHtml(String(t.max_km))} km</div>
+            ${t.id === maxTierId ? '<span class="status-pill active" style="left:auto;right:10px">Limite máximo</span>' : ""}
+          </div>
+          <div class="item-body">
+            <span class="meta">${money(t.price)}</span>
+            <div class="item-actions" style="margin-top:auto">
+              <button class="btn btn-light btn-sm" type="button" data-edit-tier="${t.id}">Editar</button>
+              <button class="btn btn-danger btn-sm" type="button" data-delete-tier="${t.id}">Excluir</button>
+            </div>
+          </div>
+        </article>`).join("");
+    }
+
+    tiersList.addEventListener("click", (e) => {
+      const editBtn = e.target.closest("[data-edit-tier]");
+      const deleteBtn = e.target.closest("[data-delete-tier]");
+      if (editBtn) openTierForm(tiers.find((t) => t.id === editBtn.dataset.editTier));
+      if (deleteBtn) deleteTier(deleteBtn.dataset.deleteTier);
+    });
+
+    function openTierForm(tier) {
+      tierForm.reset();
+      tierFormError.classList.remove("show");
+      $("#tierModalTitle").textContent = tier ? "Editar faixa" : "Nova faixa";
+      $("#tierId").value = tier?.id || "";
+      $("#tierMaxKm").value = tier?.max_km ?? "";
+      $("#tierPrice").value = tier?.price ?? "";
+      tierModal.classList.add("open");
+      setTimeout(() => $("#tierMaxKm").focus(), 50);
+    }
+
+    $("#newTierBtn").addEventListener("click", () => openTierForm(null));
+    document.querySelectorAll("[data-close-tier]").forEach((b) => b.addEventListener("click", () => tierModal.classList.remove("open")));
+    tierModal.addEventListener("click", (e) => { if (e.target === tierModal) tierModal.classList.remove("open"); });
+
+    tierForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      tierFormError.classList.remove("show");
+      const maxKm = Number($("#tierMaxKm").value);
+      const price = Number($("#tierPrice").value);
+      if (!Number.isFinite(maxKm) || maxKm <= 0) { tierFormError.textContent = "Informe uma distância válida."; tierFormError.classList.add("show"); return; }
+      if (!Number.isFinite(price) || price < 0) { tierFormError.textContent = "Informe um preço válido."; tierFormError.classList.add("show"); return; }
+
+      saveTierBtn.disabled = true; saveTierBtn.classList.add("is-loading");
+      try {
+        const id = $("#tierId").value || null;
+        const payload = { max_km: maxKm, price };
+        if (id) await supabase.from("delivery_tiers").update(payload).eq("id", id).throwOnError();
+        else await supabase.from("delivery_tiers").insert([payload]).throwOnError();
+
+        tierModal.classList.remove("open");
+        showToast(id ? "Faixa atualizada." : "Faixa criada.");
+        await loadTiers();
+      } catch (err) {
+        tierFormError.textContent = "Não foi possível salvar. Tente novamente.";
+        tierFormError.classList.add("show");
+      } finally {
+        saveTierBtn.disabled = false; saveTierBtn.classList.remove("is-loading");
+      }
+    });
+
+    async function deleteTier(id) {
+      const tier = tiers.find((t) => t.id === id);
+      if (!tier) return;
+      if (!confirm(`Excluir a faixa de até ${tier.max_km} km? Essa ação não pode ser desfeita.`)) return;
+      try {
+        await supabase.from("delivery_tiers").delete().eq("id", id).throwOnError();
+        showToast("Faixa excluída.");
+        await loadTiers();
+      } catch (err) {
+        showToast("Não foi possível excluir agora.");
+      }
+    }
+  })();
+  </script>
+</body>
+</html>
